@@ -1,11 +1,11 @@
 #' Fonction RTMB à optimiser.
 #'
-#' Les objets dd_data et dd_param doivent être
+#' Les objets dd_data et dd_param doivent exister au moment où ce modèle est optimisé.
 #'
-#' @returns
+#' @returns La valeur de vraissemblance calculée
 #' @export
 #'
-#' @examples
+#' @examples #À venir
 fnll <- function() {
   getAll(dd_param, dd_data)
   ##
