@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples #À venir
-fnll <- function() {
+fnll <- function(dd_param, fit = TRUE) {
   getAll(dd_param, dd_data)
   ##
   ## Écart-type des fonctions vraissemblances

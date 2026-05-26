@@ -5,16 +5,19 @@
 #'
 #' @import RTMB
 #'
-#' @examples run_dd()
+#' @examples ##DO NOT RUN
 run_dd <- function() {
+  ##
+  ## load_all()
   ##
   load(file = file.path('data', 'dd_data.RData'), verbose = 1)
   load(file = file.path('data', 'dd_param.RData'), verbose = 1)
   ##
-  randomVal <- c('logRpred')
+  randomVal <- c('log_Rpred')
   ##
-  mapVal <- list(logSigma_C = factor(NA), trans_M = factor(NA))
+  mapVal <- list(log_sigma_C = factor(NA), trans_M = factor(NA))
   ##
+  source(file.path('R', 'fnll.R'))
   obj <- RTMB::MakeADFun(fnll, dd_param, random = randomVal, map = mapVal)
   ##
   fit <- nlminb(
