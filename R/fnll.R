@@ -7,7 +7,7 @@
 #'
 #' @examples #À venir
 fnll <- function(dd_param, fit = TRUE) {
-  getAll(dd_param, dd_data)
+  RTMB::getAll(dd_param, dd_data)
   ##
   ## Écart-type des fonctions vraissemblances
   sigma_Bobs_abs <- exp(log_sigma_Bobs_abs)

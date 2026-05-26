@@ -8,7 +8,7 @@
 #' @examples ##DO NOT RUN
 run_dd <- function() {
   ##
-  ## load_all()
+  devtools::load_all()
   ##
   load(file = file.path('data', 'dd_data.RData'), verbose = 1)
   load(file = file.path('data', 'dd_param.RData'), verbose = 1)
@@ -33,7 +33,7 @@ run_dd <- function() {
   plr <- as.list(sdr, "Est", report = TRUE)
   plrsd <- as.list(sdr, "Std", report = TRUE)
   ##
-  par(mfcol = c(3, 7), mar = c(4, 4, 0, 1) + 0.1)
+  ## par(mfcol = c(3, 7), mar = c(4, 4, 0, 1) + 0.1)
   ylimLog <- c(-3.1, 3.1)
   graph_B_fit(
     donnee = dd_data,
