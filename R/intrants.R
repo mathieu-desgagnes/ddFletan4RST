@@ -474,9 +474,6 @@ calculer_intrants <- function(annee) {
   file.info(nom_fichier)$mtime
   dd_data$lpAlpha <- as.numeric(relationML$fit$plr$A / 1000)
   dd_data$lpBeta <- as.numeric(relationML$fit$plr$B)
-  ## poids moyen au recrutement
-  dd_data$omegaK_apres2010 <- mean(relationML$l2m(85:92)) / 1000 #poids moyen estimé des taille 85a92
-  dd_data$omegaK_avant2010 <- mean(relationML$l2m(81:88)) / 1000 #poids moyen estimé des taille 81a88
   ## poids moyen au recrutement(age-1): utilisé pour la relation ssr, donc utiliser 85cm comme définition de stock
   dd_data$omegaKmoins1 <- mean(relationML$l2m(77:84)) / 1000 #poids moyen estimé des taille 85a95
   ## poids moyen des poissons "perdus" lors du changement de taille
@@ -574,6 +571,33 @@ calculer_intrants <- function(annee) {
   ))
 
   ## (donnees d'analyse de force de cohorte pour déterminer mortalité naturelle)
+
+  dd_data$anneesFittees <- 1983:2025
+  ##
+  dd_data$anneesFitteesID <- seq_along(dd_data$anneesFittees)
+  names(dd_data$anneesFitteesID) <- dd_data$anneesFittees
+  ##
+  dd_data$a2010 <- 2010
+  ##
+  dd_data$anneesRfixe <- 2009:2023
+  ##
+  dd_data$RvalMin <- 10000
+  ##
+  ## poids moyen au recrutement
+  omegaK_apres2010 <- mean(relationML$l2m(85:92)) / 1000 #poids moyen estimé des taille 85a92
+  omegaK_avant2010 <- mean(relationML$l2m(81:88)) / 1000 #poids moyen estimé des taille 81a88
+  dd_data$omegaK <- as.data.frame(list(
+    annee = dd_data$anneesFittees,
+    valeur = rep(omegaK_avant2010, length(dd_data$anneesFittees))
+  ))
+  dd_data$omegaK[
+    dd_data$omegaK$annee >= dd_data$a2010,
+    'valeur'
+  ] <- omegaK_apres2010
+  ##
+  dd_data$sPostMarquage <- 0.98
+  ##
+  dd_data$tauxRetour <- 0.6
 
   save(
     dd_data,

@@ -197,8 +197,6 @@ fnll <- function(dd_param, fit = TRUE) {
   ##
   ## erreur d'ajustement du taux cummulatif de perte d'étiquette, indépendant
   nll.tauxPerte <- 0
-  nll <- nll - dbinom(st[ii], (st[ii] + 2 * dt[ii]), tl_func[ii], log = T)
-
   for (i.an in 1:nrow(tauxPerte)) {
     nll.tauxPerte <- nll.tauxPerte -
       dbinom(
