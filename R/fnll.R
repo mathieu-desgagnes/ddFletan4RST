@@ -197,13 +197,16 @@ fnll <- function(dd_param, fit = TRUE) {
   ##
   ## erreur d'ajustement du taux cummulatif de perte d'étiquette, indépendant
   nll.tauxPerte <- 0
+  nll <- nll - dbinom(st[ii], (st[ii] + 2 * dt[ii]), tl_func[ii], log = T)
+
   for (i.an in 1:nrow(tauxPerte)) {
-    -sum(dnorm(
-      tauxPerte,
-      tauxPerte.cummul[1:length(tauxPerte)],
-      sigma_tauxPerte,
-      log = TRUE
-    ))
+    nll.tauxPerte <- nll.tauxPerte -
+      dbinom(
+        tauxPerte[i.an, 'simpleTag'],
+        tauxPerte[i.an, 'simpleTag'] + 2 * tauxPerte[i.an, 'doubleTag'],
+        tauxPerte.cummul[i.an + 1],
+        log = TRUE
+      )
   }
   # nll.tauxPerte <- -sum(dnorm(
   #   tauxPerte,
