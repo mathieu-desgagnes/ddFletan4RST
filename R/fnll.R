@@ -127,13 +127,13 @@ fnll <- function(dd_param, fit = TRUE) {
   ##
   for (i in 1:(nrow(nTag1) - 1)) {
     nTag1[i, i] <- nTagsPoses[
-      nTagsPoses$annee == anneesFittees[i] & nTagsPoses$nbTag == 1,
-      'valeur'
+      nTagsPoses$annee == anneesFittees[i],
+      'unTagPose'
     ] *
       sPostMarquage
     nTag2[i, i] <- nTagsPoses[
-      nTagsPoses$annee == anneesFittees[i] & nTagsPoses$nbTag == 2,
-      'valeur'
+      nTagsPoses$annee == anneesFittees[i],
+      'deuxTagPose'
     ] *
       sPostMarquage
     for (j in (i + 1):ncol(nTag1)) {
@@ -159,13 +159,13 @@ fnll <- function(dd_param, fit = TRUE) {
     }
   }
   nTag1[nrow(nTag1), ncol(nTag1)] <- nTagsPoses[
-    nTagsPoses$annee == anneesFittees[nrow(nTag1)] & nTagsPoses$nbTag == 1,
-    'valeur'
+    nTagsPoses$annee == anneesFittees[nrow(nTag1)],
+    'unTagPose'
   ] *
     sPostMarquage
   nTag2[nrow(nTag2), ncol(nTag2)] <- nTagsPoses[
-    nTagsPoses$annee == anneesFittees[nrow(nTag2)] & nTagsPoses$nbTag == 2,
-    'valeur'
+    nTagsPoses$annee == anneesFittees[nrow(nTag2)],
+    'deuxTabPose'
   ] *
     sPostMarquage
   ##

@@ -15,6 +15,12 @@
 calculer_intrants <- function(annee) {
   dd_data <- list()
 
+  dd_data$anneesFittees <- 1983:2025
+  ##
+  dd_data$anneesFitteesID <- seq_along(dd_data$anneesFittees)
+  names(dd_data$anneesFitteesID) <- dd_data$anneesFittees
+  ##
+
   ## Débaquements observés, kilogramme, année civile
   load(file.path(
     'S:',
@@ -509,7 +515,20 @@ calculer_intrants <- function(annee) {
   dimnames(unTagPose)[[2]] <- c('annee', 'valeur', 'nbTag')
   deuxTagPose <- cbind(tagPose[, c('X', 'deuxTagPose')], 2)
   dimnames(deuxTagPose)[[2]] <- c('annee', 'valeur', 'nbTag')
+  dd_data$nTagsPoses <- as.data.frame(list(
+    annee = dd_data$anneesFittees,
+    'unTagPose' = rep(0, length(dd_data$anneesFittees)),
+    'deuxTagPose' = rep(0, length(dd_data$anneesFittees))
+  ))
   dd_data$nTagsPoses <- rbind(unTagPose, deuxTagPose)
+  dd_data$nTagsPoses[
+    match(unTagPose$X, dd_data$nTagsPoses$annee),
+    'unTagPose'
+  ] <- unTagPose$unTagPose
+  dd_data$nTagsPoses[
+    match(deuxTagPose$X, dd_data$nTagsPoses$annee),
+    'deuxTagPose'
+  ] <- deuxTagPose$deuxTagPose
 
   ## nombre de tag retournés au MPO, par année de pose et année de recaptrue
   nom_fichier <- file.path(
@@ -569,13 +588,8 @@ calculer_intrants <- function(annee) {
     doubleTag = temp[, 1],
     simpleTag = temp[, 2]
   ))
-
-  ## (donnees d'analyse de force de cohorte pour déterminer mortalité naturelle)
-
-  dd_data$anneesFittees <- 1983:2025
   ##
-  dd_data$anneesFitteesID <- seq_along(dd_data$anneesFittees)
-  names(dd_data$anneesFitteesID) <- dd_data$anneesFittees
+  ## (donnees d'analyse de force de cohorte pour déterminer mortalité naturelle)
   ##
   dd_data$a2010 <- 2010
   ##
