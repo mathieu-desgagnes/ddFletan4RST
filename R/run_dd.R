@@ -10,6 +10,7 @@ run_dd <- function() {
   ##
   devtools::load_all()
   ##
+  calculer_intrants(2024)
   load(file = file.path('data', 'dd_data.RData'), verbose = 1)
   load(file = file.path('data', 'dd_param.RData'), verbose = 1)
   ##
