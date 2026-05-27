@@ -520,15 +520,14 @@ calculer_intrants <- function(annee) {
     'unTagPose' = rep(0, length(dd_data$anneesFittees)),
     'deuxTagPose' = rep(0, length(dd_data$anneesFittees))
   ))
-  dd_data$nTagsPoses <- rbind(unTagPose, deuxTagPose)
   dd_data$nTagsPoses[
-    match(unTagPose$X, dd_data$nTagsPoses$annee),
+    match(unTagPose$annee, dd_data$nTagsPoses$annee),
     'unTagPose'
-  ] <- unTagPose$unTagPose
+  ] <- unTagPose$valeur
   dd_data$nTagsPoses[
-    match(deuxTagPose$X, dd_data$nTagsPoses$annee),
+    match(deuxTagPose$annee, dd_data$nTagsPoses$annee),
     'deuxTagPose'
-  ] <- deuxTagPose$deuxTagPose
+  ] <- deuxTagPose$valeur
 
   ## nombre de tag retournés au MPO, par année de pose et année de recaptrue
   nom_fichier <- file.path(
