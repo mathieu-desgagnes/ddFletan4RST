@@ -17,8 +17,8 @@ graph_taux_perte_tag <- function(donnee, objReport = NULL, langue = 'fr') {
   # tauxCummulPerte <- donnee$tauxPerte$simpleTag /
   #   (donnee$tauxPerte$simpleTag + 2 * donnee$tauxPerte$doubleTag)
   tEnMer <- sort(unique(donnee$tauxPerte$nbAnEnMer))
-  prop.tEnMer <- rep(NA, length(annees))
-  nAuMoinsUnTag <- rep(NA, length(annees))
+  prop.tEnMer <- rep(NA, length(tEnMer))
+  nAuMoinsUnTag <- rep(NA, length(tEnMer))
   for (i.an in tEnMer) {
     temp <- subset(donnee$tauxPerte, nbAnEnMer == i.an)
     temp.table <- table(temp$nbTagRecap)
