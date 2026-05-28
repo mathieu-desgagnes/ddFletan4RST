@@ -94,21 +94,21 @@ fnll <- function(dd_param, fit = TRUE) {
   omegaPred <- Bpred / Npred #Poids moyen des individus de la population
   ##
   ## calcul du taux de perte d'étiquettes, et probabilité annuelle de perdre ses 2 étiquettes
-  tauxRetention.tEnMer <- 1:100 #Vecteur du nombre entien d'années en mer
-  tauxRetention.cummul <- 1 -
-    assymptoteTauxPerte *
-      (1 - exp(-accroissementTauxPerte * tauxRetention.tEnMer)) #Vecteur du taux de perte cummulatif selon le nombre d'années en mer
-  tauxPerte.annuel <- -diff(tauxRetention.cummul) #Vecteur du taux de perte annuel, selon le nombre d'années en mer
+  tauxRetention.cummul <- function(tEnMer) {
+    1 -
+      assymptoteTauxPerte *
+        (1 - exp(-accroissementTauxPerte * tEnMer))
+  }
   tauxPerte$p_cond <- ifelse(
     tauxPerte$nbTagRecap == 2,
     yes = {
-      tauxRetention.cummul[tauxPerte$nbAnEnMer] /
-        (2 - tauxRetention.cummul[tauxPerte$nbAnEnMer])
+      tauxRetention.cummul(tauxPerte$nbAnEnMer) /
+        (2 - tauxRetention.cummul(tauxPerte$nbAnEnMer))
     },
     no = {
       2 *
-        (1 - tauxRetention.cummul[tauxPerte$nbAnEnMer]) /
-        (2 - tauxRetention.cummul[tauxPerte$nbAnEnMer])
+        (1 - tauxRetention.cummul(tauxPerte$nbAnEnMer)) /
+        (2 - tauxRetention.cummul(tauxPerte$nbAnEnMer))
     }
   )
   tauxPerte$moinslog_p_cond <- -log(tauxPerte$p_cond)
@@ -154,18 +154,20 @@ fnll <- function(dd_param, fit = TRUE) {
       #remplir le triangle supérieur
       ## nTag.temp <- nTag[i,j-1] * (1-nbEtiqPerdu[j-i+1,5])
       ## nTag[i,j] <- nTag.temp * s[j]
+      survieDuTag <- tauxRetention.cummul(j - i) /
+        tauxRetention.cummul(j - i - 1)
       nTag1[i, j] <- nTag1[i, j - 1] *
         s[j] *
-        (1 - tauxPerte.annuel[j - i]) +
+        survieDuTag +
         nTag2[i, j - 1] *
           s[j] *
           2 *
-          (1 - tauxPerte.annuel[j - i]) *
-          tauxPerte.annuel[j - i]
+          survieDuTag *
+          (1 - survieDuTag)
       nTag2[i, j] <- nTag2[i, j - 1] *
         s[j] *
-        (1 - tauxPerte.annuel[j - i]) *
-        (1 - tauxPerte.annuel[j - i])
+        survieDuTag *
+        survieDuTag
       nTagRetourPred[i, j] <- (nTag1[i, j - 1] + nTag2[i, j - 1]) *
         exp(-M) *
         tauxExp[j] *
