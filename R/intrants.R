@@ -404,19 +404,19 @@ calculer_intrants <- function(annee) {
     c('85plus')
   ]
   temp$source <- max(omega[, 'source']) + 1
-  temp$sigma <- max(omega[, 'sigma']) + 1
+  temp$sigma <- max(omega[, 'sigma'])
   dimnames(temp)[[2]] <- c('annee', 'valeur', 'source', 'sigma')
   omega <- rbind(omega, temp)
   ## relevé palangre
   temp <- relPal.poids
   temp$source <- max(omega[, 'source']) + 1
-  temp$sigma <- max(omega[, 'sigma']) + 1
+  temp$sigma <- max(omega[, 'sigma'])
   dimnames(temp)[[2]] <- c('annee', 'valeur', 'source', 'sigma')
   omega <- rbind(omega, temp)
   ## relevé chalut MPO
   # temp <- relMpo
   # temp$source <- max(omega[, 'source']) + 1
-  # temp$sigma <- max(omega[, 'sigma']) + 1
+  # temp$sigma <- max(omega[, 'sigma'])
   # dimnames(temp)[[2]] <- c('annee', 'valeur', 'source', 'sigma')
   # omega <- rbind(omega, temp)
   ##
