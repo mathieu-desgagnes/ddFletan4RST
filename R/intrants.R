@@ -15,28 +15,31 @@
 calculer_intrants <- function(annee) {
   dd_data <- list()
 
-  dd_data$anneesFittees <- 1983:(annee+1)
+  dd_data$anneesFittees <- 1983:(annee + 1)
   ##
   dd_data$anneesFitteesID <- seq_along(dd_data$anneesFittees)
   names(dd_data$anneesFitteesID) <- dd_data$anneesFittees
   ##
 
   ## Débaquements observés, kilogramme, année civile
-  load(file.path(
-    'S:',
-    'Flétan',
-    'evaluation stock',
-    'input',
-    annee,
-    'data.RData'
-  ), verbose=TRUE)
+  load(
+    file.path(
+      'S:',
+      'Flétan',
+      'evaluation stock',
+      'input',
+      annee,
+      'data.RData'
+    ),
+    verbose = TRUE
+  )
   temp <- na.omit(data$tac[, c('annee', 'consolideCivil')])
   dimnames(temp)[[2]] <- c('annee', 'debarquement')
   Cobs <- na.omit(as.data.frame(list(
     annee = temp$annee,
     valeur = temp$debarquement * 1000
   )))
-  dd_data$Cobs <- Cobs
+  dd_data$Cobs <- subset(Cobs, annee %in% dd_data$anneesFittees)
   ##
   write.csv2(
     Cobs,
@@ -84,7 +87,7 @@ calculer_intrants <- function(annee) {
   Bobs$source <- 1
   Bobs$sigma <- 1
   Bobs$nom <- 'indiceCombine'
-  dd_data$Bobs_abs <- Bobs
+  dd_data$Bobs_abs <- subset(Bobs, annee %in% dd_data$anneesFittees)
   ##
 
   ## indices d'abondance relatif
@@ -125,7 +128,10 @@ calculer_intrants <- function(annee) {
   temp$source <- max(dd_data$Bobs$source, 0) + 1
   temp$sigma <- max(dd_data$Bobs$sigma, 0) + 1
   temp$nom <- 'gadus'
-  dd_data$Bobs <- rbind(dd_data$Bobs, temp)
+  dd_data$Bobs <- rbind(
+    dd_data$Bobs,
+    subset(temp, annee %in% dd_data$anneesFittees)
+  )
   ## Lady Hammond
   temp <- as.data.frame(ybarTot$LH[['classe81plus']]$pue[, c('annee', 'moy')])
   dimnames(temp)[[2]] <- c('annee', 'valeur')
@@ -143,7 +149,10 @@ calculer_intrants <- function(annee) {
   temp$source <- max(dd_data$Bobs$source, 0) + 1
   temp$sigma <- max(dd_data$Bobs$sigma, 0) + 1
   temp$nom <- 'ladyhammond'
-  dd_data$Bobs <- rbind(dd_data$Bobs, temp)
+  dd_data$Bobs <- rbind(
+    dd_data$Bobs,
+    subset(temp, annee %in% dd_data$anneesFittees)
+  )
   ## sentinelle nGSL
   nom_fichier <- file.path(
     'S:',
@@ -185,7 +194,10 @@ calculer_intrants <- function(annee) {
   temp$source <- max(dd_data$Bobs$source, 0) + 1
   temp$sigma <- max(dd_data$Bobs$sigma, 0) + 1
   temp$nom <- 'senNGSL'
-  dd_data$Bobs <- rbind(dd_data$Bobs, temp)
+  dd_data$Bobs <- rbind(
+    dd_data$Bobs,
+    subset(temp, annee %in% dd_data$anneesFittees)
+  )
   ## relevé à la palangre
   nom_fichier <- file.path(
     'S:',
@@ -212,7 +224,10 @@ calculer_intrants <- function(annee) {
   temp$source <- max(dd_data$Bobs$source) + 1
   temp$sigma <- max(dd_data$Bobs$sigma) + 1
   temp$nom <- 'relPalangre'
-  dd_data$Bobs <- rbind(dd_data$Bobs, temp)
+  dd_data$Bobs <- rbind(
+    dd_data$Bobs,
+    subset(temp, annee %in% dd_data$anneesFittees)
+  )
   ## pue commerciale
   nom_fichier <- file.path(
     'S:',
@@ -240,7 +255,10 @@ calculer_intrants <- function(annee) {
   temp$source <- max(dd_data$Bobs$source) + 1
   temp$sigma <- max(dd_data$Bobs$sigma) + 1
   temp$nom <- 'pueCommCivil'
-  dd_data$Bobs <- rbind(dd_data$Bobs, temp)
+  dd_data$Bobs <- rbind(
+    dd_data$Bobs,
+    subset(temp, annee %in% dd_data$anneesFittees)
+  )
   ##
   ## (sentinelle sGSL)
   ##
@@ -279,6 +297,13 @@ calculer_intrants <- function(annee) {
   temp$annee <- temp$annee
   temp$nom <- "recru84a91"
   dd_data$Robs <- rbind(dd_data$Robs, temp)
+  ##
+  dd_data$RvalMin <- 10000
+  dd_data$Robs[
+    dd_data$Robs$valeur < dd_data$RvalMin,
+    'valeur'
+  ] <- dd_data$RvalMin
+  ##
   ##
   recru <- dd_data$Robs[, c('annee', 'valeur', 'nom')]
   write.csv2(
@@ -593,8 +618,6 @@ calculer_intrants <- function(annee) {
   dd_data$a2010 <- 2010
   ##
   dd_data$anneesRfixe <- 2009:2023
-  ##
-  dd_data$RvalMin <- 10000
   ##
   ## poids moyen au recrutement
   omegaK_apres2010 <- mean(relationML$l2m(85:92)) / 1000 #poids moyen estimé des taille 85a92

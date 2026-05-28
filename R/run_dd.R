@@ -10,8 +10,10 @@ run_dd <- function() {
   ##
   devtools::load_all()
   ##
-  calculer_intrants(2025)
+  calculer_intrants(2024)
   load(file = file.path('data', 'dd_data.RData'), verbose = 1)
+  dd_data$Cobs <- rbind(dd_data$Cobs, c(2025, 3083000))
+  dd_data$nTagsPoses[dd_data$nTagsPoses$annee == 2025, 'deuxTagPose'] <- 650
   load(file = file.path('data', 'dd_param.RData'), verbose = 1)
   ##
   randomVal <- c('log_Rpred')
@@ -27,6 +29,7 @@ run_dd <- function() {
     obj$gr,
     control = list(eval.max = 100000000, iter.max = 100000000)
   )
+  fit
   ##
   sdr <- sdreport(obj)
   pl <- as.list(sdr, "Est")
