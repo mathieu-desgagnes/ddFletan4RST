@@ -32,19 +32,22 @@ run_dd <- function() {
   )
   fit
   ##
-  sdr <- sdreport(obj)
-  pl <- as.list(sdr, "Est")
-  plsd <- as.list(sdr, "Std")
-  plr <- as.list(sdr, "Est", report = TRUE)
-  plrsd <- as.list(sdr, "Std", report = TRUE)
+  {
+    sdr <- sdreport(obj)
+    pl <- as.list(sdr, "Est")
+    plsd <- as.list(sdr, "Std")
+    plr <- as.list(sdr, "Est", report = TRUE)
+    plrsd <- as.list(sdr, "Std", report = TRUE)
+    sdr
+  }
   ##
 
   ## graphique dans fichier .pdf
   {
     pdf(file = file.path('data', 'sortie.pdf'), width = 14, height = 8.5)
-    par(mfrow = c(1, 2))
     ## par(mfcol = c(3, 7), mar = c(4, 4, 0, 1) + 0.1)
     ylimLog <- c(-3.1, 3.1)
+    par(mfrow = c(1, 1))
     graph_B_fit(
       donnee = dd_data,
       param = dd_param,
@@ -54,6 +57,7 @@ run_dd <- function() {
       pl = pl,
       plsd = plsd
     )
+    par(mfrow = c(2, 3))
     graph_B_residus(
       donnee = dd_data,
       param = dd_param,
@@ -63,6 +67,7 @@ run_dd <- function() {
       pl = pl,
       plsd = plsd
     )
+    par(mfrow = c(1, 3))
     graph_R(
       donnee = dd_data,
       param = dd_param,
@@ -72,6 +77,7 @@ run_dd <- function() {
       pl = pl,
       plsd = plsd
     )
+    par(mfrow = c(1, 1))
     graph_kobe(
       donnee = dd_data,
       param = dd_param,
@@ -80,6 +86,7 @@ run_dd <- function() {
       pl = pl,
       plsd = plsd
     )
+    par(mfrow = c(1, 2))
     graph_omega(
       donnee = dd_data,
       param = dd_param,
@@ -90,6 +97,7 @@ run_dd <- function() {
       plrsd = plrsd
     )
     ## graph.N(donnee=dd_data, param=dd_param, objReport=obj$report(), langue='fr', tacProj=tacProj)
+    par(mfrow = c(1, 2))
     graph_C(
       donnee = dd_data,
       param = dd_param,
@@ -104,6 +112,7 @@ run_dd <- function() {
       pl = pl,
       plsd = plsd
     )
+    par(mfrow = c(1, 2))
     graph_retour_tag_bubble(
       donnee = dd_data,
       param = dd_param,

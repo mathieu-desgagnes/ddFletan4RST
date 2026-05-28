@@ -16,9 +16,17 @@ graph_taux_perte_tag <- function(donnee, objReport = NULL, langue = 'fr') {
   )
   tauxCummulPerte <- donnee$tauxPerte$simpleTag /
     (donnee$tauxPerte$simpleTag + 2 * donnee$tauxPerte$doubleTag)
+  nbTot <- apply(
+    donnee$tauxPerte[, c('doubleTag', 'simpleTag')],
+    1,
+    function(x) {
+      x['simpleTag'] + 2 * x['doubleTag']
+    }
+  )
   plot(
     donnee$tauxPerte$tEnMer,
     tauxCummulPerte,
+    cex = 3 * sqrt(nbTot / max(nbTot)),
     xlim = c(0, nrow(donnee$tauxPerte)),
     ylim = c(0, max(tauxCummulPerte)),
     xlab = labAn,

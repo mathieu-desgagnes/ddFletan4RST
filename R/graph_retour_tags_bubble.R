@@ -160,7 +160,7 @@ graph_retour_tag_bubble <- function(
   legend(
     'bottomright',
     inset = 0.03,
-    legend = c(labAtt, labObs),
+    legend = c(labObs, labAtt),
     pch = c(1, 16)
   )
 
