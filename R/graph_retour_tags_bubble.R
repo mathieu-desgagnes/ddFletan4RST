@@ -2,9 +2,6 @@ graph_retour_tag_bubble <- function(
   donnee,
   param,
   objReport = NULL,
-  tacProj = NA,
-  fProj = NA,
-  valProj = NULL,
   langue = 'fr',
   residus = TRUE
 ) {
@@ -17,6 +14,8 @@ graph_retour_tag_bubble <- function(
       labSurvie <- 'Survie post-marquage'
       labAnCapt = 'Année de capture'
       labAnMarq = 'Années de marquage'
+      labAtt = 'Nombre attendu'
+      labObs = 'Nombre observé'
     },
     'en' = {
       labAn <- 'Year'
@@ -25,6 +24,8 @@ graph_retour_tag_bubble <- function(
       labSurvie <- 'Post-tagging survival'
       labAnCapt = 'Year of capture'
       labAnMarq = 'Year of tagging'
+      labAtt = 'Expected number'
+      labObs = 'Observed number'
     },
     'bil' = {
       labAn <- 'Année/Year'
@@ -33,13 +34,10 @@ graph_retour_tag_bubble <- function(
       labSurvie <- 'Survie post-marquage/Post-tagging survival'
       labAnCapt = 'Capture'
       labAnMarq = 'Marquage/Tagging'
+      labAtt = 'Attendu/Expected'
+      labObs = 'Observé/Observed'
     }
   )
-  if (!any(is.na(tacProj)) | !any(is.na(fProj))) {
-    nbAnProj <- max(length(tacProj[[1]]), length(fProj), na.rm = TRUE)
-  } else {
-    nbAnProj <- 0
-  }
   ##
   ## temp <- donnee$nTagsRetour; temp[which(temp==0)] <- NA
   ## plot(donnee$anneesFittees, objReport$nTagRetourPred,
@@ -55,37 +53,25 @@ graph_retour_tag_bubble <- function(
   ##        legend=paste(c('tx ret.=','s. p-m='),
   ##                     c(round(objReport$tauxRetour,2), round(donnee$sPostMarquage,2))))
   ##
+  nTagPose.part <- subset(donnee$nTagsPoses, unTagPose > 0 | deuxTagPose > 0)
   plot(
     0,
     0,
     type = 'n',
     xlim = c(
-      head(donnee$nTagsPoses[donnee$nTagsPoses$valeur > 0, 'annee'], 1) + 1,
+      head(nTagPose.part$annee, 1) + 1,
       tail(donnee$anneesFittees, 1)
     ) +
-      c(-0.5, nbAnProj + 0.5),
+      c(-0.5, 0.5),
     ylim = c(
       0,
       max(donnee$nTagsRetourObs$valeur, objReport$nTagRetourPred, na.rm = TRUE)
     ),
     xlab = labAn,
     ylab = labNbRet,
-    axes = FALSE
   )
-  box()
-  axis(
-    1,
-    at = min(donnee$anneesFitteesID):(max(donnee$anneesFitteesID) + nbAnProj),
-    labels = min(donnee$anneesFittees):(max(donnee$anneesFittees) + nbAnProj)
-  )
-  axis(1)
-  axis(2)
   abline(h = 0, col = 'grey70')
-  quelle.annee <- subset(
-    donnee$nTagsPoses,
-    valeur > 0 & annee < tail(donnee$anneesFittees, 1)
-  )$annee
-  for (i in seq_along(quelle.annee)) {
+  for (i in seq_along(nTagPose.part$annee)) {
     lines(
       donnee$anneesFittees[1:ncol(objReport$nTagRetourPred)] +
         rep(
@@ -97,14 +83,17 @@ graph_retour_tag_bubble <- function(
           100
         )[i],
       objReport$nTagRetourPred[
-        donnee$anneesFitteesID[donnee$anneesFittees == quelle.annee[i]],
+        donnee$anneesFitteesID[donnee$anneesFittees == nTagPose.part$annee[i]],
       ],
       type = 'o',
       col = i + 1,
       lwd = 2,
       pch = 16
     )
-    obs.temp <- subset(donnee$nTagsRetourObs, anneePose == quelle.annee[i])
+    obs.temp <- subset(
+      donnee$nTagsRetourObs,
+      anneePose == nTagPose.part$annee[i]
+    )
     points(
       obs.temp$anneeRecap +
         rep(
@@ -136,7 +125,7 @@ graph_retour_tag_bubble <- function(
           ),
           c(
             objReport$nTagRetourPred[
-              donnee$anneesFittees == quelle.annee[i],
+              donnee$anneesFittees == nTagPose.part$annee[i],
               donnee$anneesFittees == obs.temp[j, 'anneeRecap']
             ],
             obs.temp[j, 'valeur']
@@ -160,45 +149,21 @@ graph_retour_tag_bubble <- function(
     line = -2,
     cex.axis = 0.7
   )
-  ## legend('topleft', inset=0.03,
-  ##        legend=paste(c(labTxRet,labSurvie),
-  ##                     c(round(objReport$tauxRetour,2), round(donnee$sPostMarquage,2))))
-  if (nbAnProj > 0) {
-    for (i in seq_along(tacProj)) {
-      for (i in seq_along(quelle.annee)) {
-        points(
-          max(donnee$anneesFitteesID) +
-            seq(1, by = 1, length.out = ncol(valProj[[i]]$NtagCaptProj)),
-          valProj[[i]]$NtagCaptProj[quelle.annee[i], ],
-          col = i + 1,
-          lwd = 2,
-          pch = i
-        )
-        lines(
-          max(donnee$anneesFitteesID) +
-            seq(0, by = 1, length.out = ncol(valProj[[i]]$NtagCaptProj) + 1),
-          c(
-            objReport$nTagRetourPred[
-              quelle.annee[i],
-              ncol(objReport$nTagRetourPred)
-            ],
-            valProj[[i]]$NtagCaptProj[quelle.annee[i], ]
-          ),
-          lty = 2,
-          col = i + 1
-        )
-      }
-      axis(
-        3,
-        at = max(donnee$anneesFitteesID) +
-          seq(1, by = 1, length.out = ncol(valProj[[i]]$NtagCaptProj)),
-        labels = round(apply(valProj[[i]]$NtagCaptProj, 2, sum), 1),
-        tick = FALSE,
-        line = -1,
-        cex.axis = 0.7
-      )
-    }
-  }
+  legend(
+    'topleft',
+    inset = 0.03,
+    legend = paste(
+      c(labTxRet, labSurvie),
+      c(round(objReport$tauxRetour, 2), round(donnee$sPostMarquage, 2))
+    )
+  )
+  legend(
+    'bottomright',
+    inset = 0.03,
+    legend = c(labAtt, labObs),
+    pch = c(1, 16)
+  )
+
   ## text(x=mean(par('usr')[c(1,2)]), y=diff(par('usr')[c(3,4)])*0.9 + par('usr')[3], labels='A', cex=1.5)
   ##
   ## résiduels
