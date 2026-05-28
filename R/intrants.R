@@ -299,10 +299,11 @@ calculer_intrants <- function(annee) {
   dd_data$Robs <- rbind(dd_data$Robs, temp)
   ##
   dd_data$RvalMin <- 10000
-  dd_data$Robs[
-    dd_data$Robs$valeur < dd_data$RvalMin,
-    'valeur'
-  ] <- dd_data$RvalMin
+  # dd_data$Robs[
+  #   dd_data$Robs$valeur < dd_data$RvalMin,
+  #   'valeur'
+  # ] <- dd_data$RvalMin
+  dd_data$Robs <- subset(dd_data$Robs, valeur >= dd_data$RvalMin)
   ##
   ##
   recru <- dd_data$Robs[, c('annee', 'valeur', 'nom')]

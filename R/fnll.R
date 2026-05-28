@@ -20,7 +20,7 @@ fnll <- function(dd_param, fit = TRUE) {
   sigma_longAge <- exp(log_sigma_longAge)
   ## un random walk sur le recrutement
   sigma_Rrw <- exp(log_sigma_Rrw)
-  sigma_tauxPerte <- exp(log_sigma_tauxPerte) #taux de perte d'étiquette
+  # sigma_tauxPerte <- exp(log_sigma_tauxPerte) #taux de perte d'étiquette
   ##
   ## Bobs <- OBS(Bobs)
   ##
@@ -406,7 +406,7 @@ fnll <- function(dd_param, fit = TRUE) {
   REPORT(sigma_Robs)
   REPORT(sigma_longAge)
   ## REPORT(sigma_retourTag)
-  REPORT(sigma_tauxPerte)
+  # REPORT(sigma_tauxPerte)
   ##
   REPORT(N0)
   REPORT(Bpred)
