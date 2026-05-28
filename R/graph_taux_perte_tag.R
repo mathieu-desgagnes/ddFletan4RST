@@ -14,21 +14,24 @@ graph_taux_perte_tag <- function(donnee, objReport = NULL, langue = 'fr') {
       labTxPerte <- 'Tx cumul. perte/Cumul. tag loss'
     }
   )
-  tauxCummulPerte <- donnee$tauxPerte$simpleTag /
-    (donnee$tauxPerte$simpleTag + 2 * donnee$tauxPerte$doubleTag)
-  nbTot <- apply(
-    donnee$tauxPerte[, c('doubleTag', 'simpleTag')],
-    1,
-    function(x) {
-      x['simpleTag'] + 2 * x['doubleTag']
-    }
-  )
+  # tauxCummulPerte <- donnee$tauxPerte$simpleTag /
+  #   (donnee$tauxPerte$simpleTag + 2 * donnee$tauxPerte$doubleTag)
+  tEnMer <- sort(unique(donnee$tauxPerte$nbAnEnMer))
+  prop.tEnMer <- rep(NA, length(annees))
+  nAuMoinsUnTag <- rep(NA, length(annees))
+  for (i.an in tEnMer) {
+    temp <- subset(donnee$tauxPerte, nbAnEnMer == i.an)
+    temp.table <- table(temp$nbTagRecap)
+    prop.tEnMer[i.an] <- temp.table['1'] /
+      (temp.table['1'] + 2 * temp.table['2'])
+    nAuMoinsUnTag[i.an] <- sum(temp.table)
+  }
   plot(
-    donnee$tauxPerte$tEnMer,
-    tauxCummulPerte,
-    cex = 3 * sqrt(nbTot / max(nbTot)),
-    xlim = c(0, nrow(donnee$tauxPerte)),
-    ylim = c(0, max(tauxCummulPerte)),
+    tEnMer,
+    prop.tEnMer,
+    cex = 3 * sqrt(nAuMoinsUnTag / max(nAuMoinsUnTag)),
+    xlim = c(0, max(tEnMer)),
+    ylim = c(0, max(prop.tEnMer)),
     xlab = labAn,
     ylab = labTxPerte
   )

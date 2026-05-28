@@ -606,7 +606,7 @@ calculer_intrants <- function(annee) {
   perteTag <- read.csv2(file = fichierPerteTag, stringsAsFactors = FALSE)
   print(file.info(fichierPerteTag)$mtime)
   ## calcul du taux de perte (Lebris etal 2009)
-  # perteTag <- subset(perteTag, nbAnEnMer > 0)
+  perteTag <- subset(perteTag, nbAnEnMer > 0)
   # temp <- table(perteTag$nbAnEnMer, perteTag$nbTagPerdu)
   # dd_data$tauxPerte <- as.data.frame(list(
   #   tEnMer = as.numeric(dimnames(temp)[[1]]),
