@@ -94,12 +94,12 @@ fnll <- function(dd_param, fit = TRUE) {
   omegaPred <- Bpred / Npred #Poids moyen des individus de la population
   ##
   ## calcul du taux de perte d'étiquettes, et probabilité annuelle de perdre ses 2 étiquettes
-  tauxPerte.age <- 0:100 #Vecteur du nombre d'années en mer
+  tauxPerte.tEnMer <- 0:100 #Vecteur du nombre entien d'années en mer
   tauxPerte.cummul <- assymptoteTauxPerte *
-    (1 - exp(-accroissementTauxPerte * tauxPerte.age)) #Vecteur du taux de perte cummulatif selon le nombre d'années en mer
+    (1 - exp(-accroissementTauxPerte * tauxPerte.tEnMer)) #Vecteur du taux de perte cummulatif selon le nombre d'années en mer
   tauxPerte.annuel <- c(0, diff(tauxPerte.cummul)) #Vecteur du taux de perte annuel, selon le nombre d'années en mer
   ## ##
-  ## nbEtiqPerdu <- matrix(nrow=length(tauxPerte.age), ncol=5)
+  ## nbEtiqPerdu <- matrix(nrow=length(tauxPerte.tEnMer), ncol=5)
   ## nbEtiqPerdu[1,] <- c(1,0,0,0,0)
   ## for(i.an in 2:nrow(nbEtiqPerdu)){
   ##     ## 2étiquette; premierÉtiq; deuxièmeÉtiq; aucunÉtiq; taux1etiqSur2etiq
@@ -196,6 +196,7 @@ fnll <- function(dd_param, fit = TRUE) {
   ## nll.Bproc <- -sum(dnorm(tail(log_Bpred,-1), log(Bpred.proc), sigma_Bproc, log=TRUE), na.rm=TRUE)
   ##
   ## erreur d'ajustement du taux cummulatif de perte d'étiquette, indépendant
+  ## version binomiale
   nll.tauxPerte <- 0
   for (i.an in 1:nrow(tauxPerte)) {
     nll.tauxPerte <- nll.tauxPerte -

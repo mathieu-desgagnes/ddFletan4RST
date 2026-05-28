@@ -125,6 +125,7 @@ run_dd <- function() {
       objReport = obj$report(),
       langue = 'fr'
     )
+    par(mfrow = c(1, 1))
     graph_taux_perte_tag(
       donnee = dd_data,
       objReport = obj$report(),
