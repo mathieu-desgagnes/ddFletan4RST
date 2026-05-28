@@ -15,7 +15,7 @@
 calculer_intrants <- function(annee) {
   dd_data <- list()
 
-  dd_data$anneesFittees <- 1983:2025
+  dd_data$anneesFittees <- 1983:annee
   ##
   dd_data$anneesFitteesID <- seq_along(dd_data$anneesFittees)
   names(dd_data$anneesFitteesID) <- dd_data$anneesFittees

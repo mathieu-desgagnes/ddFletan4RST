@@ -14,10 +14,13 @@ graph_taux_perte_tag <- function(donnee, objReport = NULL, langue = 'fr') {
       labTxPerte <- 'Tx cumul. perte/Cumul. tag loss'
     }
   )
+  tauxCummulPerte <- donnee$tauxPerte$simpleTag /
+    (donnee$tauxPerte$simpleTag + 2 * donnee$tauxPerte$doubleTag)
   plot(
-    names(donnee$tauxPerte),
-    donnee$tauxPerte,
-    xlim = c(0, length(donnee$tauxPerte)),
+    donnee$tauxPerte$tEnMer,
+    tauxCummulPerte,
+    xlim = c(0, nrow(donnee$tauxPerte)),
+    ylim = c(0, max(tauxCummulPerte)),
     xlab = labAn,
     ylab = labTxPerte
   )
