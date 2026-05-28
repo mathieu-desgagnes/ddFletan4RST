@@ -15,7 +15,7 @@
 calculer_intrants <- function(annee) {
   dd_data <- list()
 
-  dd_data$anneesFittees <- 1983:annee
+  dd_data$anneesFittees <- 1983:(annee+1)
   ##
   dd_data$anneesFitteesID <- seq_along(dd_data$anneesFittees)
   names(dd_data$anneesFitteesID) <- dd_data$anneesFittees
@@ -29,7 +29,7 @@ calculer_intrants <- function(annee) {
     'input',
     annee,
     'data.RData'
-  ))
+  ), verbose=TRUE)
   temp <- na.omit(data$tac[, c('annee', 'consolideCivil')])
   dimnames(temp)[[2]] <- c('annee', 'debarquement')
   Cobs <- na.omit(as.data.frame(list(
