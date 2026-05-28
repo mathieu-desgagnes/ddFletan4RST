@@ -414,11 +414,11 @@ calculer_intrants <- function(annee) {
   dimnames(temp)[[2]] <- c('annee', 'valeur', 'source', 'sigma')
   omega <- rbind(omega, temp)
   ## relevé chalut MPO
-  temp <- relMpo
-  temp$source <- max(omega[, 'source']) + 1
-  temp$sigma <- max(omega[, 'sigma']) + 1
-  dimnames(temp)[[2]] <- c('annee', 'valeur', 'source', 'sigma')
-  omega <- rbind(omega, temp)
+  # temp <- relMpo
+  # temp$source <- max(omega[, 'source']) + 1
+  # temp$sigma <- max(omega[, 'sigma']) + 1
+  # dimnames(temp)[[2]] <- c('annee', 'valeur', 'source', 'sigma')
+  # omega <- rbind(omega, temp)
   ##
   write.csv2(
     omega,

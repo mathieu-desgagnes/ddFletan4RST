@@ -165,7 +165,7 @@ fnll <- function(dd_param, fit = TRUE) {
     sPostMarquage
   nTag2[nrow(nTag2), ncol(nTag2)] <- nTagsPoses[
     nTagsPoses$annee == anneesFittees[nrow(nTag2)],
-    'deuxTabPose'
+    'deuxTagPose'
   ] *
     sPostMarquage
   ##
